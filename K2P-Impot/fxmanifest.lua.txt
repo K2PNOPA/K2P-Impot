@@ -1,0 +1,15 @@
+fx_version 'cerulean'
+game 'gta5'
+
+author 'Votre Nom'
+description 'Script d\'impôt'
+version '1.0.0'
+
+client_script 'client.lua'
+server_script 'server.lua'
+
+server_scripts {
+    '@mysql-async/lib/MySQL.lua',
+    'config.lua',
+    'server.lua',
+}

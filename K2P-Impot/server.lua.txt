@@ -1,0 +1,25 @@
+ESX = nil
+
+TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+
+-- Fonction pour prélever l'impôt
+function PreleverImpot()
+    local xPlayers = ESX.GetPlayers()
+
+    for i = 1, #xPlayers do
+        local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
+
+        if xPlayer then
+            xPlayer.removeMoney(Config.MontantImpot)
+            TriggerClientEvent('esx:showNotification', xPlayer.source, 'Vous avez payé ' .. Config.MontantImpot .. '$ d\'impôt.')
+        end
+    end
+end
+
+-- Prélever l'impôt toutes les 30 minutes
+Citizen.CreateThread(function()
+    while true do
+        Citizen.Wait(1800000)  -- 30 minutes
+        PreleverImpot()
+    end
+end)
