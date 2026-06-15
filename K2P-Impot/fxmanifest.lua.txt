@@ -1,15 +1,13 @@
 fx_version 'cerulean'
 game 'gta5'
 
-author 'Votre Nom'
-description 'Script d\'impôt'
-version '1.0.0'
+author 'Nytex'
+description 'Systeme d impot ESX Legacy'
+version '1.1.0'
 
-client_script 'client.lua'
-server_script 'server.lua'
+shared_script '@es_extended/imports.lua'
 
 server_scripts {
-    '@mysql-async/lib/MySQL.lua',
     'config.lua',
-    'server.lua',
+    'server.lua'
 }
