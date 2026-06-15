@@ -1,25 +1,47 @@
-ESX = nil
+local ESX = exports["es_extended"]:getSharedObject()
 
-TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+local function PreleverImpot()
+    local joueurs = ESX.GetPlayers()
 
--- Fonction pour prélever l'impôt
-function PreleverImpot()
-    local xPlayers = ESX.GetPlayers()
-
-    for i = 1, #xPlayers do
-        local xPlayer = ESX.GetPlayerFromId(xPlayers[i])
+    for _, playerId in pairs(joueurs) do
+        local xPlayer = ESX.GetPlayerFromId(playerId)
 
         if xPlayer then
-            xPlayer.removeMoney(Config.MontantImpot)
-            TriggerClientEvent('esx:showNotification', xPlayer.source, 'Vous avez payé ' .. Config.MontantImpot .. '$ d\'impôt.')
+            local argent = xPlayer.getMoney()
+
+            if argent >= Config.MontantImpot then
+                xPlayer.removeMoney(Config.MontantImpot)
+
+                TriggerClientEvent(
+                    'esx:showNotification',
+                    playerId,
+                    ('💰 Impôt prélevé : %s$'):format(Config.MontantImpot)
+                )
+
+                print(("[IMPOT] %s a payé %s$"):format(
+                    GetPlayerName(playerId),
+                    Config.MontantImpot
+                ))
+            else
+                TriggerClientEvent(
+                    'esx:showNotification',
+                    playerId,
+                    ('❌ Vous n avez pas assez d argent pour payer %s$ d impôt.'):format(Config.MontantImpot)
+                )
+
+                print(("[IMPOT] %s n'a pas assez d'argent"):format(
+                    GetPlayerName(playerId)
+                ))
+            end
         end
     end
 end
 
--- Prélever l'impôt toutes les 30 minutes
-Citizen.CreateThread(function()
+CreateThread(function()
+    print("^2[IMPOT]^7 Systeme d'impot demarre.")
+
     while true do
-        Citizen.Wait(1800000)  -- 30 minutes
+        Wait(Config.IntervalleImpot)
         PreleverImpot()
     end
 end)
